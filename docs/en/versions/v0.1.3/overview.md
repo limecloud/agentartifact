@@ -1,3 +1,8 @@
+---
+title: v0.1.3 overview
+description: Agent Artifact v0.1.3 release overview.
+---
+
 # Agent Artifact v0.1.3
 
 Agent Artifact v0.1.3 is a patch release that refreshes the Agent standards ecosystem after Agent Context became a current published standard.
@@ -7,11 +12,5 @@ Agent Artifact v0.1.3 is a patch release that refreshes the Agent standards ecos
 - Adds Agent Context to the current standards table and boundary map.
 - Removes Agent Context from the future-candidate list.
 - Adds Agent Context to README related-standard links.
-- Updates `llms.txt`, `llms-full.txt`, and public LLM copies so AI clients can discover Agent Context.
+- Updates LLM entrypoints so AI clients can discover Agent Context.
 - Adds version snapshot pages for v0.1.3.
-
-## Links
-
-- Documentation: https://limecloud.github.io/agentartifact/
-- Agent Context: https://limecloud.github.io/agentcontext/
-- LLM context: https://limecloud.github.io/agentartifact/llms-full.txt
