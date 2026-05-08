@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1 - 2026-05-08
+
+- Adds Agent Tool to the current standards ecosystem map.
+- Refreshes README, LLM entrypoints, and version snapshots for Agent Tool discovery.
+
 ## v0.1.0 - 2026-05-08
 
 Initial public draft of Agent Artifact.

@@ -12,7 +12,12 @@ const enNav = [
     text: 'Version',
     items: [
       { text: 'latest', link: '/en/specification' },
-      { text: 'v0.1.0 overview', link: '/en/versions/v0.1.0/overview' },
+      { text: 'v0.1.1 overview', link: '/en/versions/v0.1.1/overview' },
+      { text: 'v0.1.1', link: '/en/versions/v0.1.1/specification' },
+      { text: 'v0.1.1 overview', link: '/en/versions/v0.1.1/overview' },
+    { text: 'v0.1.1 specification', link: '/en/versions/v0.1.1/specification' },
+    { text: 'v0.1.1 changelog', link: '/en/versions/v0.1.1/changelog' },
+    { text: 'v0.1.0 overview', link: '/en/versions/v0.1.0/overview' },
       { text: 'v0.1.0', link: '/en/versions/v0.1.0/specification' }
     ]
   }
@@ -28,7 +33,12 @@ const zhNav = [
     text: '版本',
     items: [
       { text: 'latest', link: '/zh/specification' },
-      { text: 'v0.1.0 概览', link: '/zh/versions/v0.1.0/overview' },
+      { text: 'v0.1.1 概览', link: '/zh/versions/v0.1.1/overview' },
+      { text: 'v0.1.1', link: '/zh/versions/v0.1.1/specification' },
+      { text: 'v0.1.1 概览', link: '/zh/versions/v0.1.1/overview' },
+    { text: 'v0.1.1 规范', link: '/zh/versions/v0.1.1/specification' },
+    { text: 'v0.1.1 变更记录', link: '/zh/versions/v0.1.1/changelog' },
+    { text: 'v0.1.0 概览', link: '/zh/versions/v0.1.0/overview' },
       { text: 'v0.1.0', link: '/zh/versions/v0.1.0/specification' }
     ]
   }
@@ -71,6 +81,9 @@ const enSidebar = [
     { text: 'Browser snapshot', link: '/en/examples/browser-snapshot' }
   ]},
   { text: 'Versions', items: [
+    { text: 'v0.1.1 overview', link: '/en/versions/v0.1.1/overview' },
+    { text: 'v0.1.1 specification', link: '/en/versions/v0.1.1/specification' },
+    { text: 'v0.1.1 changelog', link: '/en/versions/v0.1.1/changelog' },
     { text: 'v0.1.0 overview', link: '/en/versions/v0.1.0/overview' },
     { text: 'v0.1.0 specification', link: '/en/versions/v0.1.0/specification' },
     { text: 'v0.1.0 changelog', link: '/en/versions/v0.1.0/changelog' }
@@ -114,6 +127,9 @@ const zhSidebar = [
     { text: '浏览器快照', link: '/zh/examples/browser-snapshot' }
   ]},
   { text: '版本', items: [
+    { text: 'v0.1.1 概览', link: '/zh/versions/v0.1.1/overview' },
+    { text: 'v0.1.1 规范', link: '/zh/versions/v0.1.1/specification' },
+    { text: 'v0.1.1 变更记录', link: '/zh/versions/v0.1.1/changelog' },
     { text: 'v0.1.0 概览', link: '/zh/versions/v0.1.0/overview' },
     { text: 'v0.1.0 规范', link: '/zh/versions/v0.1.0/specification' },
     { text: 'v0.1.0 变更记录', link: '/zh/versions/v0.1.0/changelog' }
