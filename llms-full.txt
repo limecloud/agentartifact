@@ -727,3 +727,15 @@ Agent Artifact v0.1.1 is a patch release that refreshes the Agent standards ecos
 - Updated boundary map with the portable tool layer.
 - LLM entrypoint refresh for AI clients.
 - No breaking protocol changes to Agent Artifact.
+
+# v0.1.2 overview
+Source: https://limecloud.github.io/agentartifact/en/versions/v0.1.2/overview
+
+# v0.1.2 Overview
+
+Agent Artifact v0.1.2 fixes concise LLM discovery after Agent Tool became a current published standard.
+
+## Included
+
+- Adds Agent Tool to `llms.txt` and `llm.txt` related-standard links.
+- Keeps the Agent Artifact core protocol semantics compatible with v0.1.1.

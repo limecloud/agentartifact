@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.2 - 2026-05-08
+
+- Fixes concise LLM entrypoints so Agent Tool is discoverable from `llms.txt` and `llm.txt`.
+
 ## v0.1.1 - 2026-05-08
 
 - Adds Agent Tool to the current standards ecosystem map.

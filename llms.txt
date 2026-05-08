@@ -4,7 +4,7 @@
 
 Site: https://limecloud.github.io/agentartifact/
 Repository: https://github.com/limecloud/agentartifact
-Version: v0.1.1
+Version: v0.1.2
 
 ## Start
 
@@ -39,8 +39,11 @@ Version: v0.1.1
 - Agent Runtime: https://limecloud.github.io/agentruntime/
 - Agent Evidence: https://limecloud.github.io/agentevidence/
 - Agent Policy: https://limecloud.github.io/agentpolicy/
+- Agent Tool: https://limecloud.github.io/agenttool/
 
 ## Versions
 
-- [v0.1.1 overview](https://limecloud.github.io/agentartifact/en/versions/v0.1.1/overview): Latest released version overview.
-- [v0.1.1 specification snapshot](https://limecloud.github.io/agentartifact/en/versions/v0.1.1/specification): Latest released specification snapshot.
+- [v0.1.2 overview](https://limecloud.github.io/agentartifact/en/versions/v0.1.2/overview): Latest released version overview.
+- [v0.1.2 specification snapshot](https://limecloud.github.io/agentartifact/en/versions/v0.1.2/specification): Latest released specification snapshot.
+- [v0.1.1 overview](https://limecloud.github.io/agentartifact/en/versions/v0.1.1/overview): Previous released version overview.
+- [v0.1.1 specification snapshot](https://limecloud.github.io/agentartifact/en/versions/v0.1.1/specification): Previous released specification snapshot.
