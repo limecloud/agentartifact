@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-render-manifest.schema.json",
+  "title": "Agent Artifact Render Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "render_manifest_id",
+    "artifact_id",
+    "version_id",
+    "viewer_surface"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "render_manifest_id": {
+      "type": "string"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "version_id": {
+      "type": "string"
+    },
+    "viewer_surface": {
+      "type": "string"
+    },
+    "preferred_layout": {
+      "type": "string"
+    },
+    "supported_part_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "preview_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "thumbnail_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "fallback_media_type": {
+      "type": "string"
+    },
+    "hydration": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-export-manifest.schema.json",
+  "title": "Agent Artifact Export Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_id",
+    "artifact_id",
+    "version_id",
+    "format",
+    "created_at",
+    "created_by"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "export_id": {
+      "type": "string"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "version_id": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string"
+    },
+    "package_type": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "byte_ref_id",
+          "uri",
+          "media_type"
+        ],
+        "properties": {
+          "byte_ref_id": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "digest": {
+            "type": "string"
+          },
+          "digest_algorithm": {
+            "type": "string"
+          },
+          "storage_owner": {
+            "type": "string"
+          },
+          "access": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "redaction_state": {
+            "type": "string",
+            "enum": [
+              "none",
+              "redacted",
+              "withheld",
+              "tokenized",
+              "unknown"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "redaction_state": {
+      "type": "string",
+      "enum": [
+        "none",
+        "redacted",
+        "withheld",
+        "tokenized",
+        "unknown"
+      ]
+    },
+    "completeness": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial",
+        "redacted",
+        "failed",
+        "unknown"
+      ]
+    },
+    "policy_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "omissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "access": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

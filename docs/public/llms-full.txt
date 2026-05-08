@@ -1,0 +1,714 @@
+# Agent Artifact full documentation for LLMs
+
+Source root: https://limecloud.github.io/agentartifact
+
+Agent Artifact is a portable standard for durable agent deliverables: artifact identity, kinds, parts, byte refs, versions, operations, diffs, previews, exports, source links, and handoff packages. It does not replace storage backends, UI renderers, runtime task protocols, evidence systems, policy systems, or knowledge stores.
+
+
+# What is Agent Artifact?
+Source: https://limecloud.github.io/agentartifact/en/what-is-agent-artifact
+
+# What is Agent Artifact?
+
+Agent Artifact defines the durable deliverable layer for agent systems. It is the portable record of what an agent produced, which version is current, which parts make it up, where the bytes live, which sources and runs created it, how it should be rendered, what changed, what was exported, and what can be handed to another system.
+
+Agent outputs should not disappear into chat text. A report, image, transcript, browser snapshot, code patch, dataset, presentation, webpage, or support bundle often needs its own identity, lifecycle, preview, version history, source links, export policy, evidence refs, and handoff metadata.
+
+## Use Agent Artifact when
+
+- a response becomes a durable deliverable rather than a transient message.
+- the output has multiple parts, blocks, files, previews, attachments, or source links.
+- users can revise, approve, compare, export, or hand off the result.
+- runtime, UI, evidence, policy, and storage need to reference the same generated object.
+- artifact bytes are large or private and should be referenced, not embedded.
+- a peer agent or external service needs a package with stable ids, manifests, hashes, and constraints.
+
+## What it is not
+
+Agent Artifact is not a storage backend, not a UI renderer, not a file format, not a model output schema, not an evidence archive, not a policy engine, and not a runtime task protocol.
+
+| Adjacent system | Owns | Agent Artifact owns |
+| --- | --- | --- |
+| Runtime | Tool execution, tasks, events, retries, cancellation. | Artifact ids, produced-by refs, versions, operations, and status. |
+| UI | Workbench layout, preview components, editors, interactions. | Render manifests, viewer hints, active version, and part selection facts. |
+| Evidence | Claim support, verification, review, replay, audit export. | Artifact refs and artifact-local provenance links that evidence can cite. |
+| Policy | Approval, retention, redaction, export permission. | Policy refs, export constraints, and recorded redaction/export state. |
+| Storage | Bytes, object store, database rows, CDN, filesystem paths. | Portable byte refs, hashes, media type, size, and manifest identity. |
+| Knowledge | Trusted source material and compiled context. | Source links from artifact parts back to knowledge/source refs. |
+
+## Minimum compatible outcome
+
+A minimal compatible implementation can create one `artifact` envelope with a stable id, kind, title, status, current version, parts, byte refs, hashes, runtime refs, and export refs. It can later add richer versions, operations, diffs, render manifests, handoff packages, source links, and evidence refs without changing the identity model.
+
+
+# Artifact model
+Source: https://limecloud.github.io/agentartifact/en/concepts/artifact-model
+
+# Artifact Model
+
+Agent Artifact treats deliverables as structured, versioned objects rather than message decorations. The standard separates product semantics from storage bytes, UI views, runtime tasks, and evidence graphs.
+
+## Core loop
+
+```text
+agent work -> artifact intent -> parts / bytes -> version -> render -> export / handoff -> evidence refs
+```
+
+1. Runtime, tool, model, human, or peer agent produces an artifact candidate.
+2. The artifact layer assigns stable identity, kind, status, owner, and refs.
+3. Content is represented as parts, blocks, byte refs, or external resources.
+4. Versions and operations record how the artifact changes.
+5. Render manifests describe safe preview surfaces without owning UI components.
+6. Export manifests describe package, format, redaction, policy, and integrity state.
+7. Handoff packages let other systems receive the artifact without losing provenance.
+
+## Identity axes
+
+| Axis | Meaning |
+| --- | --- |
+| `artifact_id` | Stable artifact identity across versions and exports. |
+| `artifact_kind` | Domain kind such as report, image, audio, transcript, browser snapshot, code patch, dataset, presentation, or generic file. |
+| `version_id` | Stable identity for one immutable artifact snapshot. |
+| `part_id` | Stable identity for a block, file, media part, table, source appendix, page, slide, or segment. |
+| `byte_ref_id` | Stable pointer to bytes in a storage system. |
+| `operation_id` | Stable identity for a mutation. |
+| `export_id` | Stable identity for a produced export. |
+| `handoff_id` | Stable identity for a package given to another system. |
+
+## Kind versus format
+
+`artifact_kind` describes product meaning. `media_type` describes representation. A `report_document` may export to Markdown, HTML, PDF, and JSON. An `image_output` may have PNG bytes, a thumbnail, a prompt manifest, and a source mask. Do not use file extension alone as the artifact kind.
+
+## Parts versus bytes
+
+Agent Artifact supports both structured parts and byte refs:
+
+- document blocks, transcript segments, table rows, slides, patches, and annotations are parts.
+- PNG, WAV, PDF, ZIP, HTML, JSON, or large raw outputs are byte refs.
+- embedded data is allowed only for compact, safe payloads.
+- large or private payloads should stay in the owning storage system and be referenced by URI, digest, size, media type, and access constraints.
+
+## Versions and operations
+
+A version is an immutable snapshot. An operation is an intended or applied change. A diff is a comparison between versions or parts. Keeping them separate lets a product support streaming generation, local edits, AI rewrites, review comments, export, and replay without making UI state the source of truth.
+
+
+# Specification
+Source: https://limecloud.github.io/agentartifact/en/specification
+
+# Specification
+
+Agent Artifact latest draft is a portable standard for durable agent deliverables. It defines artifact identity, kind, parts, byte refs, versions, operations, diffs, render manifests, source links, export manifests, handoff packages, lifecycle events, and interoperability refs.
+
+Agent Artifact owns deliverable semantics. It does not own storage engines, UI rendering, model APIs, runtime tasks, evidence graphs, policy decisions, knowledge stores, or legal retention rules.
+
+## Scope
+
+Agent Artifact standardizes these implementation concerns:
+
+1. Artifact envelope identity, kind, lifecycle, ownership, current version, labels, and refs.
+2. Artifact parts for blocks, media, files, pages, slides, transcript segments, patches, tables, and annotations.
+3. Byte refs with media type, size, digest, URI, storage owner, access constraints, and redaction state.
+4. Versions and snapshots that can be referenced, compared, exported, reviewed, and handed off.
+5. Operations and diffs for streaming creation, partial rewrites, user edits, tool updates, and AI revisions.
+6. Source links from artifact or part to sources, runs, tools, models, prompts, knowledge refs, evidence refs, and policy decisions.
+7. Render manifests for safe preview, viewer surface, fallback, thumbnails, and partial hydration.
+8. Export manifests for format, package contents, integrity, redaction, policy, provenance, and completeness.
+9. Handoff packages for peer agents, support bundles, external tools, and offline review.
+10. Event envelopes for artifact lifecycle changes.
+
+Agent Artifact does **not** standardize a document editor schema, visual component system, object storage API, archive format, citation policy, model output contract, or workflow language.
+
+## Core objects
+
+| Object | Purpose |
+| --- | --- |
+| `artifact` | Stable envelope for one deliverable across versions and exports. |
+| `artifact_part` | Structured block, file, media, page, slide, segment, patch, table, or annotation. |
+| `byte_ref` | Pointer to bytes with media type, size, digest, storage owner, and access constraints. |
+| `artifact_version` | Immutable snapshot of artifact metadata, parts, and byte refs. |
+| `artifact_operation` | Mutation intent or applied operation. |
+| `artifact_diff` | Comparison summary between versions, parts, or byte refs. |
+| `artifact_source_link` | Relationship between artifact content and source, run, tool, model, human, policy, or evidence refs. |
+| `render_manifest` | Preview and viewer contract for UI surfaces. |
+| `export_manifest` | Export package, format, integrity, completeness, redaction, and policy facts. |
+| `handoff_package` | Portable package for another system or peer agent. |
+| `artifact_event` | Lifecycle event envelope. |
+
+## Artifact envelope
+
+Every exported `artifact` SHOULD include:
+
+| Field | Requirement |
+| --- | --- |
+| `schema_version` | Required Agent Artifact schema version. |
+| `artifact_id` | Required stable id. |
+| `artifact_kind` | Required product kind. |
+| `title` | Required user-visible title. |
+| `status` | Required lifecycle status. |
+| `created_at`, `updated_at` | Required timestamps. |
+| `created_by` | Required actor or system ref. |
+| `current_version_id` | Recommended after the first snapshot exists. |
+| `parts` | Recommended compact part records or refs. |
+| `byte_refs` | Recommended byte refs when the artifact has stored payloads. |
+| `versions` | Recommended version refs. |
+| `source_links` | Recommended source/provenance refs. |
+| `render_manifest_ref` | Recommended when UI preview exists. |
+| `export_refs` | Recommended when exports exist. |
+| `policy_refs`, `evidence_refs`, `runtime_refs` | Optional adjacent standard refs. |
+
+## Artifact kinds
+
+Compatible implementations SHOULD start with this vocabulary and extend with product-specific kinds under namespaced values when needed:
+
+- `report_document`
+- `analysis_document`
+- `plan_document`
+- `table_document`
+- `presentation_document`
+- `webpage_artifact`
+- `image_output`
+- `audio_output`
+- `video_output`
+- `transcript`
+- `browser_session`
+- `browser_snapshot`
+- `code_patch`
+- `code_file`
+- `dataset`
+- `model_output_bundle`
+- `support_bundle`
+- `generic_file`
+
+`generic_file` SHOULD be a compatibility fallback, not the default for domain artifacts.
+
+## Lifecycle status
+
+| Status | Meaning |
+| --- | --- |
+| `planned` | Artifact intent exists but no content is available. |
+| `streaming` | Content is being generated or updated. |
+| `draft` | Usable but not final. |
+| `ready` | Current version is ready for normal use. |
+| `reviewed` | Review verdict exists. |
+| `exported` | Export manifest exists. |
+| `handed_off` | Handoff package was produced. |
+| `archived` | Artifact is no longer active. |
+| `redacted` | Payload or parts were transformed or withheld. |
+| `failed` | Creation or update failed. |
+| `deleted` | Payload has been removed; audit metadata may remain. |
+
+## Parts
+
+Parts SHOULD include stable `part_id`, `part_type`, `role`, `order`, `media_type`, content or byte refs, source links, annotations, and fallback text when possible.
+
+Initial part types:
+
+- `document_block`
+- `rich_text`
+- `table`
+- `image`
+- `audio`
+- `video`
+- `file`
+- `page`
+- `slide`
+- `transcript_segment`
+- `code_patch`
+- `annotation`
+- `source_appendix`
+- `preview`
+- `thumbnail`
+
+## Byte refs
+
+A `byte_ref` SHOULD include:
+
+- `byte_ref_id`
+- `uri`
+- `media_type`
+- `size_bytes`
+- `digest`
+- `digest_algorithm`
+- `storage_owner`
+- `access`
+- `redaction_state`
+- `expires_at` when access is temporary.
+
+The standard prefers refs over embedded bytes. Inline payloads are appropriate only for compact, safe data required for offline inspection.
+
+## Versions and snapshots
+
+An `artifact_version` SHOULD be immutable. It should include version number or label, creation time, created by, snapshot refs, parent version refs, operation refs, integrity summary, source links, policy refs, and evidence refs.
+
+A compatible implementation MUST NOT rely on mutable UI state as the only current artifact version. If a user edits an artifact, the edit should create an operation and eventually a version or draft snapshot.
+
+## Operations and diffs
+
+Operations SHOULD be small, typed, and replayable when practical.
+
+Initial operation types:
+
+- `artifact.create`
+- `artifact.set_metadata`
+- `artifact.add_part`
+- `artifact.update_part`
+- `artifact.remove_part`
+- `artifact.reorder_parts`
+- `artifact.attach_source`
+- `artifact.attach_byte_ref`
+- `artifact.finalize_version`
+- `artifact.redact`
+- `artifact.export`
+- `artifact.handoff`
+- `artifact.fail`
+
+Diffs SHOULD summarize additions, removals, modifications, moved parts, changed byte refs, changed source links, and changed policy/export state.
+
+## Source links
+
+A source link connects artifact content to its origins. It may point to a runtime event, tool call, model call, prompt, source document, knowledge item, human edit, policy decision, evidence claim, telemetry span, peer task, or previous artifact version.
+
+Source links SHOULD be part-addressable. A report section, transcript segment, image, or code patch should be able to cite different sources.
+
+## Render manifest
+
+A render manifest describes how a product can preview an artifact without making UI the owner of the artifact. It SHOULD include viewer surface, preferred layout, preview refs, thumbnails, fallback media type, safe hydration boundaries, part ordering, and unsupported-part fallback.
+
+## Export manifest
+
+An export manifest describes a produced package or file. It SHOULD include export id, artifact id, version id, format, files, media types, digests, redaction state, policy refs, completeness, created by, created at, and access constraints.
+
+## Handoff package
+
+A handoff package SHOULD include artifact envelope, selected versions, selected parts, byte refs, source links, policy refs, evidence refs, export refs, integrity summary, and receiver constraints. It should avoid copying private bytes unless the package policy explicitly allows it.
+
+## Event classes
+
+Compatible implementations SHOULD emit or export these event classes:
+
+- `artifact.created`
+- `artifact.updated`
+- `artifact.part.added`
+- `artifact.part.updated`
+- `artifact.byte_ref.attached`
+- `artifact.source_link.attached`
+- `artifact.version.created`
+- `artifact.diff.created`
+- `artifact.render_manifest.created`
+- `artifact.export.created`
+- `artifact.handoff.created`
+- `artifact.redacted`
+- `artifact.archived`
+- `artifact.failed`
+- `artifact.deleted`
+
+## Fail-safe guidance
+
+If bytes are missing, private, expired, or inaccessible, consumers should preserve the artifact envelope, version ids, digests, source links, and reason codes. A missing payload should not erase the existence of the artifact.
+
+## Version compatibility
+
+Version `0.1.0` is a draft. Implementations SHOULD include `schema_version: "0.1.0"` and tolerate unknown fields. Producers SHOULD preserve identity fields and add optional fields rather than changing artifact kind or lifecycle semantics.
+
+
+# Artifact envelope
+Source: https://limecloud.github.io/agentartifact/en/contracts/artifact-envelope
+
+# Artifact Envelope
+
+The `artifact` envelope is the stable identity of a deliverable. It survives edits, exports, UI changes, storage moves, and peer handoff.
+
+## Required shape
+
+```json
+{
+  "schema_version": "0.1.0",
+  "artifact_id": "art_01JZ...",
+  "artifact_kind": "report_document",
+  "title": "Market analysis report",
+  "status": "draft",
+  "created_at": "2026-05-08T10:00:00Z",
+  "updated_at": "2026-05-08T10:02:00Z",
+  "created_by": { "type": "agent", "id": "agent_123" },
+  "current_version_id": "artver_001"
+}
+```
+
+## Rules
+
+- Keep `artifact_id` stable across versions and exports.
+- Use `artifact_kind` for domain meaning, not file extension.
+- Store large payloads through `byte_refs`, not inline fields.
+- Link runtime, evidence, policy, source, and telemetry through refs.
+- Preserve the envelope even when payload bytes expire or are redacted.
+
+
+# Artifact parts
+Source: https://limecloud.github.io/agentartifact/en/contracts/artifact-parts
+
+# Artifact Parts
+
+`artifact_part` records a meaningful unit inside an artifact. A part can be a document block, table, transcript segment, image, slide, file, code patch, annotation, or source appendix.
+
+## Part rules
+
+- `part_id` must be stable inside the artifact.
+- `part_type` describes structure, not visual styling.
+- `order` is a logical order, not a DOM layout system.
+- Every part should have fallback text or a byte ref when possible.
+- Source links should be part-addressable.
+
+## Why parts matter
+
+Parts let systems update one section, diff two versions, cite a source, redact one range, render a thumbnail, or review a transcript segment without rewriting the entire artifact.
+
+
+# Versions and snapshots
+Source: https://limecloud.github.io/agentartifact/en/contracts/versions-and-snapshots
+
+# Versions and Snapshots
+
+An artifact version is an immutable snapshot. It can point to metadata, parts, byte refs, source links, render manifests, export manifests, policy refs, and evidence refs.
+
+## Version rules
+
+- Create a new version for meaningful user-visible changes.
+- Record parent version refs for branching and rewrites.
+- Keep version ids stable and immutable.
+- Store draft state separately from finalized snapshots when needed.
+- Do not treat a UI editor buffer as the only version source of truth.
+
+## Snapshot contents
+
+A snapshot may inline compact metadata and part summaries, but large bytes should remain in storage and be referenced by digest and media type.
+
+
+# Operations and diffs
+Source: https://limecloud.github.io/agentartifact/en/contracts/operations-and-diffs
+
+# Operations and Diffs
+
+Operations describe how an artifact changed. Diffs describe what changed between two artifact states.
+
+## Operation examples
+
+- `artifact.create`
+- `artifact.add_part`
+- `artifact.update_part`
+- `artifact.remove_part`
+- `artifact.reorder_parts`
+- `artifact.attach_source`
+- `artifact.finalize_version`
+- `artifact.redact`
+- `artifact.export`
+- `artifact.handoff`
+
+## Diff rules
+
+Diffs should identify changed parts, changed byte refs, changed source links, changed order, changed status, and changed policy/export state. A text diff alone is not enough for media, transcript, browser, or structured-document artifacts.
+
+
+# Source links
+Source: https://limecloud.github.io/agentartifact/en/contracts/source-links
+
+# Source Links
+
+`artifact_source_link` connects an artifact or part to an origin. Origins include documents, retrieval results, tool calls, model calls, prompts, human edits, runtime events, policy decisions, evidence claims, telemetry spans, peer tasks, and previous artifact versions.
+
+## Link roles
+
+- `supports`
+- `derived_from`
+- `quoted_from`
+- `generated_by`
+- `edited_by`
+- `reviewed_by`
+- `verified_by`
+- `blocked_by_policy`
+- `redacted_by_policy`
+
+## Rule
+
+Source links should point to stable refs and selectors. Do not duplicate full source documents inside an artifact unless the source owner permits embedding.
+
+
+# Render manifest
+Source: https://limecloud.github.io/agentartifact/en/contracts/render-manifest
+
+# Render Manifest
+
+A `render_manifest` tells UI surfaces how to preview an artifact. It is not a component implementation.
+
+## Fields
+
+A render manifest SHOULD include viewer surface, preferred layout, supported part types, thumbnail refs, preview refs, fallback media type, hydration boundaries, unsupported-part behavior, and active version.
+
+## Boundary
+
+UI owns actual components and interactions. Agent Artifact owns the portable facts that let a UI choose a safe renderer and preserve artifact identity.
+
+
+# Export manifest
+Source: https://limecloud.github.io/agentartifact/en/contracts/export-manifest
+
+# Export Manifest
+
+An `export_manifest` records a produced package or file. It lets users, support teams, peer agents, and audit systems know exactly what was exported.
+
+## Required concerns
+
+- export id, artifact id, and version id.
+- format and package type.
+- file list with media type, size, digest, and path.
+- redaction and retention state.
+- policy refs and evidence refs.
+- completeness and omitted items.
+- access constraints and expiry.
+
+## Rule
+
+Export is a snapshot, not the source of truth. The artifact and version remain the primary identity.
+
+
+# Handoff package
+Source: https://limecloud.github.io/agentartifact/en/contracts/handoff-package
+
+# Handoff Package
+
+A `handoff_package` gives another system enough artifact facts to continue work without losing identity, provenance, policy, or evidence boundaries.
+
+## Package contents
+
+A package SHOULD include selected artifact envelopes, versions, parts, byte refs, source links, export manifests, policy refs, evidence refs, integrity summary, receiver constraints, and omitted payload reasons.
+
+## Rule
+
+Handoff should preserve refs before copying bytes. If a receiver cannot access private byte refs, the package should say why and include safe previews or redacted substitutes when permitted.
+
+
+# Interoperability
+Source: https://limecloud.github.io/agentartifact/en/contracts/interoperability
+
+# Interoperability
+
+Agent Artifact is storage-neutral and UI-neutral. It should preserve native ids from adjacent systems rather than replacing them.
+
+| System | Alignment |
+| --- | --- |
+| MCP | Resources, content blocks, resource links, media content, and annotations inform refs and embedded content boundaries. |
+| A2A | Peer-agent tasks and artifacts can carry artifact ids, parts, files, and handoff refs. |
+| OCI descriptors | Media type, digest, size, and annotation patterns inform byte refs and export manifests. |
+| W3C PROV | Entities, activities, and agents inform provenance refs. |
+| Web Annotation | Selectors and targets inform part-level annotations and source links. |
+| in-toto / SLSA | Attestation and provenance patterns inform integrity and generated-by records. |
+| BagIt / RO-Crate | Package manifests and metadata inform export and handoff packages. |
+| C2PA | Content provenance and ingredients inform generated media provenance. |
+| CloudEvents | Event envelope reference. |
+| OpenTelemetry | Trace and span correlation reference. |
+
+## Boundary rule
+
+If the question is "where are the bytes stored?", use storage. If the question is "how is this rendered?", use UI. If the question is "what did the agent produce and how can it be versioned, previewed, exported, cited, and handed off?", use Agent Artifact.
+
+
+# Implementation quickstart
+Source: https://limecloud.github.io/agentartifact/en/authoring/quickstart
+
+# Implementation Quickstart
+
+## 1. Pick one durable output
+
+Start with one artifact kind: report, image, transcript, browser snapshot, code patch, dataset, or support bundle.
+
+## 2. Create the envelope
+
+Assign `artifact_id`, `artifact_kind`, `title`, `status`, timestamps, creator, and runtime refs.
+
+## 3. Attach parts or byte refs
+
+Use structured parts for blocks, segments, slides, tables, patches, and annotations. Use byte refs for files and media. Include media type, size, digest, and access constraints.
+
+## 4. Create a version
+
+Create an immutable `artifact_version` after the first useful snapshot. Record parent version and operation refs when later edits happen.
+
+## 5. Add render and export manifests
+
+Render manifests tell UI how to preview safely. Export manifests record what was exported, how it was redacted, and which files and hashes were included.
+
+## 6. Link adjacent standards
+
+Link runtime ids, evidence packs, policy decisions, knowledge sources, tool calls, model calls, telemetry spans, and peer-agent handoff refs. Do not copy their payloads unless explicitly safe.
+
+
+# Acceptance scenarios
+Source: https://limecloud.github.io/agentartifact/en/authoring/acceptance-scenarios
+
+# Acceptance Scenarios
+
+## Report document
+
+An agent creates a report as `report_document`, adds structured parts, links sources per section, creates version 1, renders a preview, exports Markdown and PDF, and evidence can cite the artifact id and version id.
+
+## Image output
+
+An image generation task creates `image_output` with PNG byte refs, thumbnail refs, prompt/source links, model refs, policy refs, and export metadata. The UI does not infer identity from a file card.
+
+## Transcript correction
+
+An audio transcription artifact contains transcript segments. A user edits segments, an operation records the change, version 2 is created, and the original ASR bytes remain immutable.
+
+## Browser snapshot
+
+A browser session artifact links actions, screenshots, observations, URL, timestamp, and trace ids. The replay viewer consumes the artifact graph instead of scraping UI state.
+
+## Handoff
+
+A peer agent receives a handoff package containing artifact envelope, selected version, safe byte refs, source links, policy refs, and omitted private payload reasons.
+
+
+# Ecosystem boundaries
+Source: https://limecloud.github.io/agentartifact/en/reference/ecosystem-boundaries
+
+# Ecosystem Boundaries
+
+Agent Artifact owns durable deliverable semantics. It should not become the whole content system.
+
+| Boundary | Rule |
+| --- | --- |
+| Runtime | Runtime produces and updates; Agent Artifact records deliverable identity, versions, parts, and refs. |
+| UI | UI renders and edits; Agent Artifact supplies render manifests and source-of-truth ids. |
+| Evidence | Evidence verifies and audits; Agent Artifact supplies artifact/version/part/export refs. |
+| Policy | Policy allows or blocks export/retention/redaction; Agent Artifact records policy refs and resulting export state. |
+| Knowledge | Knowledge supplies sources; Agent Artifact links parts to source refs. |
+| Tool | Tools produce files and media; Agent Artifact normalizes outputs into durable artifacts. |
+| Storage | Storage owns bytes; Agent Artifact owns byte refs and integrity metadata. |
+
+## Anti-patterns
+
+- Treating chat markdown as the only artifact source of truth.
+- Using file extension as artifact kind.
+- Letting viewer-local state become the artifact graph.
+- Exporting private bytes without an export manifest and policy refs.
+- Creating a new generic file card for every domain output.
+- Losing source links and version ids during peer handoff.
+
+
+# Research sources
+Source: https://limecloud.github.io/agentartifact/en/reference/research-sources
+
+# Research Sources
+
+Agent Artifact v0.1.0 uses established resource, artifact, provenance, packaging, eventing, telemetry, and content provenance references. These references inform the shape of the standard; they do not transfer ownership of Agent Artifact semantics.
+
+| Source | What Agent Artifact takes from it |
+| --- | --- |
+| [Model Context Protocol specification](https://modelcontextprotocol.io/specification) | Resources, resource links, embedded resources, content blocks, media content, annotations, and URI-based references. |
+| [Agent2Agent Protocol](https://github.com/a2aproject/A2A) | Peer agent tasks, messages, artifacts, and handoff references. |
+| [OCI Image Specification](https://github.com/opencontainers/image-spec) | Descriptors with media type, digest, size, annotations, manifests, and content-addressable refs. |
+| [W3C PROV Data Model](https://www.w3.org/TR/prov-dm/) | Entities, activities, agents, derivation, attribution, and provenance graphs. |
+| [W3C Web Annotation Data Model](https://www.w3.org/TR/annotation-model/) | Targets, bodies, selectors, and states for part-level annotations and source ranges. |
+| [in-toto Attestation Framework](https://github.com/in-toto/attestation) | Subject digests, predicates, and signed provenance attestations. |
+| [SLSA Provenance](https://slsa.dev/spec/v1.0/provenance) | Build and generation provenance for artifact integrity. |
+| [BagIt RFC 8493](https://www.rfc-editor.org/rfc/rfc8493) | Package layout, manifests, payload files, and checksums. |
+| [RO-Crate](https://www.researchobject.org/ro-crate/) | Metadata-rich research object packaging. |
+| [C2PA Specification](https://c2pa.org/specifications/specifications/2.1/index.html) | Content provenance manifests, ingredients, assertions, and generated media provenance. |
+| [CloudEvents specification](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md) | Portable event envelope design. |
+| [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) | Trace and span correlation for model and tool-generated artifacts. |
+
+
+# Source analysis
+Source: https://limecloud.github.io/agentartifact/en/reference/source-analysis
+
+# Source Analysis
+
+Agent Artifact exists because agent systems produce more than messages. They produce deliverables that need identity, versioning, preview, provenance, export, and handoff semantics.
+
+## What existing standards already solve
+
+Resource protocols show how clients can reference external content by URI and media type. Container and package standards show why descriptors need digest, size, media type, annotations, and manifests. Provenance standards show that artifacts are entities created by activities and agents. Annotation standards show how comments and source links need selectors rather than whole-document copies. Attestation standards show how generation and build facts can be signed or verified. Event and telemetry standards show how artifact lifecycle events should correlate with traces without becoming the trace backend.
+
+## What agent systems add
+
+Agent outputs may stream, get repaired, be rewritten by models, edited by users, verified by evidence, blocked by policy, exported to support bundles, or handed to peer agents. A single answer can become a report, a table, an image, a transcript, and a browser replay. These products need stable artifact ids and part ids so UI, runtime, evidence, policy, and storage can refer to the same object.
+
+## Design conclusions
+
+1. Make artifact identity independent from chat messages, files, and UI cards.
+2. Separate artifact kind from media type and file extension.
+3. Separate parts, byte refs, versions, operations, diffs, renders, exports, and handoff packages.
+4. Prefer refs and hashes over embedded private payloads.
+5. Preserve source links at part level.
+6. Treat exports as snapshots, not as the source of truth.
+7. Preserve artifact envelope and audit shape even when bytes expire or are redacted.
+
+
+# Agent standards ecosystem
+Source: https://limecloud.github.io/agentartifact/en/reference/agent-ecosystem
+
+# Agent Standards Ecosystem
+
+The Agent standards ecosystem splits agent products into portable contracts. Each standard owns one layer of meaning and links to the others through stable refs instead of swallowing their responsibilities.
+
+This page is the public friend-link map for the current standards. Use it to discover adjacent protocols and decide which standard should own a new concept.
+
+## Where Agent Artifact fits
+
+Agent Artifact owns durable deliverable facts: artifact identity, kinds, parts, byte refs, versions, operations, diffs, render manifests, export manifests, source links, and handoff packages.
+
+Artifact explains what the agent produced, which version is current, how it is structured, where the bytes live, and how it can be rendered, exported, reviewed, or handed off.
+
+## Current standards
+
+| Standard | Role | Site | LLM context | Repository |
+| --- | --- | --- | --- | --- |
+| Agent Knowledge | Source-grounded knowledge packs for agents. | [site](https://limecloud.github.io/agentknowledge/) | [llms-full](https://limecloud.github.io/agentknowledge/llms-full.txt) | [repo](https://github.com/limecloud/agentknowledge) |
+| Agent UI | Interaction surfaces for agent products. | [site](https://limecloud.github.io/agentui/) | [llms-full](https://limecloud.github.io/agentui/llms-full.txt) | [repo](https://github.com/limecloud/agentui) |
+| Agent Runtime | Execution facts, controls, tasks, tools, and recovery. | [site](https://limecloud.github.io/agentruntime/) | [llms-full](https://limecloud.github.io/agentruntime/llms-full.txt) | [repo](https://github.com/limecloud/agentruntime) |
+| Agent Evidence | Evidence, provenance, verification, review, replay, and export. | [site](https://limecloud.github.io/agentevidence/) | [llms-full](https://limecloud.github.io/agentevidence/llms-full.txt) | [repo](https://github.com/limecloud/agentevidence) |
+| Agent Policy | Risk, permission, approval, retention, waiver, access, and policy decision facts. | [site](https://limecloud.github.io/agentpolicy/) | [llms-full](https://limecloud.github.io/agentpolicy/llms-full.txt) | [repo](https://github.com/limecloud/agentpolicy) |
+| Agent Artifact | Durable deliverables, versions, parts, previews, exports, source links, and handoff packages. | [site](https://limecloud.github.io/agentartifact/) | [llms-full](https://limecloud.github.io/agentartifact/llms-full.txt) | [repo](https://github.com/limecloud/agentartifact) |
+
+## Boundary rule
+
+```text
+Agent Knowledge -> what durable source-grounded context an agent can use
+Agent Runtime   -> how agent work is accepted, executed, controlled, and resumed
+Agent UI        -> how agent work is projected into user-visible surfaces
+Agent Evidence  -> why an agent outcome can be trusted, reviewed, replayed, and exported
+Agent Policy    -> whether an agent action may proceed and under which constraints
+Agent Artifact  -> what durable deliverable the agent produced and how it changes
+```
+
+No standard should become the whole stack. A compatible implementation should preserve native ids and link across standards with refs.
+
+## Future standard candidates
+
+| Candidate | Why it may become a standard |
+| --- | --- |
+| Agent Tool | Capability declarations, permissions, progress, results, large outputs, and audit refs. |
+| Agent Context | Working context, memory, compaction, missing context, and source selection boundaries. |
+| Agent Evaluation | Acceptance scenarios, rubrics, eval runs, quality gates, and evidence-backed benchmark records. |
+| Agent Workflow | Portable multi-step work plans, scene launches, background jobs, and handoff states. |
+| Agent Model Routing | Task profiles, model candidates, routing decisions, fallback, quota, and cost records. |
+
+These candidates should remain design notes until they can be specified without relying on one product implementation.
+
+
+# v0.1.0 overview
+Source: https://limecloud.github.io/agentartifact/en/versions/v0.1.0/overview
+
+# v0.1.0 Overview
+
+Agent Artifact v0.1.0 is the first public draft. It defines the durable deliverable layer for agent outputs.
+
+## Included
+
+- Artifact envelope, kind, status, ownership, and refs.
+- Artifact parts and byte refs.
+- Versions, snapshots, operations, and diffs.
+- Source links, render manifests, export manifests, and handoff packages.
+- Event classes and JSON Schemas.
+- English and Chinese documentation.
+- LLM-friendly `llms.txt` and `llms-full.txt`.

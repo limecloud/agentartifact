@@ -1,0 +1,41 @@
+# Agent Artifact
+
+> Portable durable deliverables for agent systems: artifact identity, kinds, parts, byte refs, versions, operations, diffs, previews, exports, source links, and handoff packages.
+
+Site: https://limecloud.github.io/agentartifact/
+Repository: https://github.com/limecloud/agentartifact
+Version: v0.1.0
+
+## Start
+
+- What is Agent Artifact?: https://limecloud.github.io/agentartifact/en/what-is-agent-artifact
+- Specification: https://limecloud.github.io/agentartifact/en/specification
+- Artifact model: https://limecloud.github.io/agentartifact/en/concepts/artifact-model
+- JSON Schemas: https://limecloud.github.io/agentartifact/en/reference/json-schemas
+
+## Core contracts
+
+- Artifact envelope: https://limecloud.github.io/agentartifact/en/contracts/artifact-envelope
+- Artifact parts: https://limecloud.github.io/agentartifact/en/contracts/artifact-parts
+- Versions and snapshots: https://limecloud.github.io/agentartifact/en/contracts/versions-and-snapshots
+- Operations and diffs: https://limecloud.github.io/agentartifact/en/contracts/operations-and-diffs
+- Source links: https://limecloud.github.io/agentartifact/en/contracts/source-links
+- Render manifest: https://limecloud.github.io/agentartifact/en/contracts/render-manifest
+- Export manifest: https://limecloud.github.io/agentartifact/en/contracts/export-manifest
+- Handoff package: https://limecloud.github.io/agentartifact/en/contracts/handoff-package
+- Interoperability: https://limecloud.github.io/agentartifact/en/contracts/interoperability
+
+## Examples
+
+- Report document: https://limecloud.github.io/agentartifact/en/examples/report-document
+- Image output: https://limecloud.github.io/agentartifact/en/examples/image-output
+- Transcript correction: https://limecloud.github.io/agentartifact/en/examples/transcript-correction
+- Browser snapshot: https://limecloud.github.io/agentartifact/en/examples/browser-snapshot
+
+## Related standards
+
+- Agent Knowledge: https://limecloud.github.io/agentknowledge/
+- Agent UI: https://limecloud.github.io/agentui/
+- Agent Runtime: https://limecloud.github.io/agentruntime/
+- Agent Evidence: https://limecloud.github.io/agentevidence/
+- Agent Policy: https://limecloud.github.io/agentpolicy/

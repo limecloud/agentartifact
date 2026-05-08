@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-part.schema.json",
+  "title": "Agent Artifact Part",
+  "type": "object",
+  "required": [
+    "part_id",
+    "part_type"
+  ],
+  "properties": {
+    "part_id": {
+      "type": "string"
+    },
+    "part_type": {
+      "type": "string",
+      "enum": [
+        "document_block",
+        "rich_text",
+        "table",
+        "image",
+        "audio",
+        "video",
+        "file",
+        "page",
+        "slide",
+        "transcript_segment",
+        "code_patch",
+        "annotation",
+        "source_appendix",
+        "preview",
+        "thumbnail"
+      ]
+    },
+    "role": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "media_type": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "byte_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "byte_ref_id",
+          "uri",
+          "media_type"
+        ],
+        "properties": {
+          "byte_ref_id": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "digest": {
+            "type": "string"
+          },
+          "digest_algorithm": {
+            "type": "string"
+          },
+          "storage_owner": {
+            "type": "string"
+          },
+          "access": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "redaction_state": {
+            "type": "string",
+            "enum": [
+              "none",
+              "redacted",
+              "withheld",
+              "tokenized",
+              "unknown"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "source_link_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "fallback_text": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

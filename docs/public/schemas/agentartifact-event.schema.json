@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-event.schema.json",
+  "title": "Agent Artifact Event",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "type",
+    "timestamp"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "artifact.created",
+        "artifact.updated",
+        "artifact.part.added",
+        "artifact.part.updated",
+        "artifact.byte_ref.attached",
+        "artifact.source_link.attached",
+        "artifact.version.created",
+        "artifact.diff.created",
+        "artifact.render_manifest.created",
+        "artifact.export.created",
+        "artifact.handoff.created",
+        "artifact.redacted",
+        "artifact.archived",
+        "artifact.failed",
+        "artifact.deleted"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "version_id": {
+      "type": "string"
+    },
+    "part_id": {
+      "type": "string"
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "export_id": {
+      "type": "string"
+    },
+    "handoff_id": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

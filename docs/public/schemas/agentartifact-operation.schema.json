@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-operation.schema.json",
+  "title": "Agent Artifact Operation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operation_id",
+    "artifact_id",
+    "operation_type",
+    "created_at",
+    "created_by"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "operation_id": {
+      "type": "string"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "operation_type": {
+      "type": "string",
+      "enum": [
+        "artifact.create",
+        "artifact.set_metadata",
+        "artifact.add_part",
+        "artifact.update_part",
+        "artifact.remove_part",
+        "artifact.reorder_parts",
+        "artifact.attach_source",
+        "artifact.attach_byte_ref",
+        "artifact.finalize_version",
+        "artifact.redact",
+        "artifact.export",
+        "artifact.handoff",
+        "artifact.fail"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "base_version_id": {
+      "type": "string"
+    },
+    "target_part_id": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "applied",
+        "rejected",
+        "failed",
+        "superseded"
+      ]
+    },
+    "result_version_id": {
+      "type": "string"
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

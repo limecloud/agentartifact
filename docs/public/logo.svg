@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Agent Artifact logo">
+  <rect width="64" height="64" rx="18" fill="#17233d"/>
+  <path d="M17 18h20l10 10v18H17z" fill="#9cc9ff"/>
+  <path d="M37 18v11h10" fill="#6aa7ff"/>
+  <path d="M22 36h20M22 43h14M22 29h10" stroke="#17233d" stroke-width="4" stroke-linecap="round"/>
+</svg>

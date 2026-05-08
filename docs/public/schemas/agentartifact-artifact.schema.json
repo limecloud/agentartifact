@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-artifact.schema.json",
+  "title": "Agent Artifact Envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "artifact_kind",
+    "title",
+    "status",
+    "created_at",
+    "updated_at",
+    "created_by"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "artifact_kind": {
+      "type": "string",
+      "enum": [
+        "report_document",
+        "analysis_document",
+        "plan_document",
+        "table_document",
+        "presentation_document",
+        "webpage_artifact",
+        "image_output",
+        "audio_output",
+        "video_output",
+        "transcript",
+        "browser_session",
+        "browser_snapshot",
+        "code_patch",
+        "code_file",
+        "dataset",
+        "model_output_bundle",
+        "support_bundle",
+        "generic_file"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "streaming",
+        "draft",
+        "ready",
+        "reviewed",
+        "exported",
+        "handed_off",
+        "archived",
+        "redacted",
+        "failed",
+        "deleted"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "current_version_id": {
+      "type": "string"
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://limecloud.github.io/agentartifact/schemas/agentartifact-part.schema.json",
+        "title": "Agent Artifact Part",
+        "type": "object",
+        "required": [
+          "part_id",
+          "part_type"
+        ],
+        "properties": {
+          "part_id": {
+            "type": "string"
+          },
+          "part_type": {
+            "type": "string",
+            "enum": [
+              "document_block",
+              "rich_text",
+              "table",
+              "image",
+              "audio",
+              "video",
+              "file",
+              "page",
+              "slide",
+              "transcript_segment",
+              "code_patch",
+              "annotation",
+              "source_appendix",
+              "preview",
+              "thumbnail"
+            ]
+          },
+          "role": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "byte_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "byte_ref_id",
+                "uri",
+                "media_type"
+              ],
+              "properties": {
+                "byte_ref_id": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                },
+                "media_type": {
+                  "type": "string"
+                },
+                "size_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "digest": {
+                  "type": "string"
+                },
+                "digest_algorithm": {
+                  "type": "string"
+                },
+                "storage_owner": {
+                  "type": "string"
+                },
+                "access": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "redaction_state": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "redacted",
+                    "withheld",
+                    "tokenized",
+                    "unknown"
+                  ]
+                },
+                "expires_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "source_link_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "fallback_text": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "byte_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "byte_ref_id",
+          "uri",
+          "media_type"
+        ],
+        "properties": {
+          "byte_ref_id": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "digest": {
+            "type": "string"
+          },
+          "digest_algorithm": {
+            "type": "string"
+          },
+          "storage_owner": {
+            "type": "string"
+          },
+          "access": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "redaction_state": {
+            "type": "string",
+            "enum": [
+              "none",
+              "redacted",
+              "withheld",
+              "tokenized",
+              "unknown"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "source_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "render_manifest_ref": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "export_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "policy_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "runtime_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
